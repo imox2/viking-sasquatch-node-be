@@ -6,7 +6,7 @@ const setupRouter = (io) => {
     router.get("/tree", async (req, res) => {
         try {
             const tree = await Tree.findOne({})
-            res.status(200).send(tree.data);
+            res.status(200).send(tree.data ? tree.data:[]);
         } catch(e) {
             console.log(e);
             res.status(400).send({success: false});
