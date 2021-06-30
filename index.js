@@ -30,7 +30,7 @@ app.use(express.json());
 
 
 //Routes
-app.use("/", router);
+app.use("/tree-api", router);
 server.listen(3000, () => {
     console.log("Server started")
 });
