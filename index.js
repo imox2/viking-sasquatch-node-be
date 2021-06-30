@@ -1,5 +1,4 @@
 const express = require("express")
-const socketIO = require("socket.io")
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server,{
@@ -28,9 +27,8 @@ const router = setupRouter(io);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-
 //Routes
-app.use("/tree-api", router);
+app.use("/", router);
 server.listen(3000, () => {
     console.log("Server started")
 });

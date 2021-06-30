@@ -5,10 +5,10 @@ const Tree = require("../model/Tree")
 const setupRouter = (io) => {
     router.get("/tree", async (req, res) => {
         try {
-            let response = [];
+            let response = {data:[],_id:''};
             const tree = await Tree.findOne({})
             if(tree) {
-                response = tree.data;
+                response = {data:JSON.parse(tree.data),_id:tree._id};
             }
             res.status(200).send(response);
         } catch(e) {
@@ -16,13 +16,17 @@ const setupRouter = (io) => {
             res.status(400).send({success: false});
         }
     });
-    router.post("/tree", async (req, res) => {
+    router.post("/tree/:id?", async (req, res) => {
         try {
             const data = req.body["data"];
-            const tree = await Tree.findOne({})
-            tree.data = JSON.stringify(data);
-            await tree.save();
-            io.emit("tree_change", {data});
+            const dbData = {data: JSON.stringify(data)};
+            if(req.params.id) {
+                dbData["_id"]=req.params.id;
+            }
+            const obj = new Tree(dbData);
+            obj.isNew = req.params.id ? false: true;
+            await obj.save();
+            io.emit("tree_change", dbData);
             res.status(200).send({success: true})
         } catch(e) {
             console.log(e);
