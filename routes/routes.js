@@ -5,8 +5,12 @@ const Tree = require("../model/Tree")
 const setupRouter = (io) => {
     router.get("/tree", async (req, res) => {
         try {
+            let response = [];
             const tree = await Tree.findOne({})
-            res.status(200).send(tree.data ? tree.data:[]);
+            if(tree) {
+                response = tree.data;
+            }
+            res.status(200).send(response);
         } catch(e) {
             console.log(e);
             res.status(400).send({success: false});
